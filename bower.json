@@ -1,0 +1,23 @@
+{
+    "name": "purescript-cypress",
+    "license": [
+        "MIT"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/alexmouton/purescript-cypress"
+    },
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "output"
+    ],
+    "dependencies": {
+        "purescript-console": "^v4.4.0",
+        "purescript-effect": "^v2.0.1",
+        "purescript-foreign": "^v5.0.0",
+        "purescript-psci-support": "^v4.0.0",
+        "purescript-transformers": "^v4.2.0"
+    }
+}
