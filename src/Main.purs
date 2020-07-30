@@ -1,12 +1,11 @@
 module Main where
 
 import Prelude
-import Foreign (Foreign)
 
 import Effect (Effect)
-import Cypress (get, go, should, typ, runCypress, visit, first, click)
+import Cypress (Cy, get, go, should, typ, runCypress, visit, first, click)
 
-main :: Foreign -> Effect Unit
+main :: Cy -> Effect Unit
 main = runCypress $ do
   visit "/"
   _ <- get "a.a-carousel-goto-prevpage"

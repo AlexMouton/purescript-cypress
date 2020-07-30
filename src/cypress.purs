@@ -7,7 +7,7 @@ import Effect.Uncurried (EffectFn1, runEffectFn1, EffectFn2, runEffectFn2, Effec
 import Foreign (Foreign)
 import Control.Monad.Reader.Trans (runReaderT, ReaderT(..), ask)
 
-type Cy = Foreign
+foreign import data Cy :: Type
 
 newtype Elements = Elements Foreign
 newtype Document = Document Foreign
