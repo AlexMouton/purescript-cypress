@@ -341,9 +341,9 @@ submit = naskC1 submitFn
 -- task :: String -> CypressM Unit
 -- task = askC2 taskFn
 
--- foreign import thenFn :: forall a b. EffectFn2 (a -> b) a b
--- thn :: forall a b. (a -> b) -> a -> CypressM b
--- thn = naskC2 thenFn
+foreign import thenFn :: forall a b. EffectFn2 (a -> b) a b
+thn :: forall a b. (a -> b) -> a -> CypressM b
+thn = naskC2 thenFn
 
 foreign import tickFn :: EffectFn2 Int Cy Clock
 tick :: Int -> CypressM Clock
