@@ -123,9 +123,13 @@ foreign import closestFn :: EffectFn2 String (Query Elements) (Query Elements)
 closest :: String -> Query Elements -> CypressM (Query Elements)
 closest = naskC2 closestFn
 
-foreign import containsFn :: EffectFn2 String (Query Elements) (Query Elements)
-contains :: String -> Query Elements -> CypressM (Query Elements)
-contains = naskC2 containsFn
+foreign import contains1Fn :: EffectFn2 String (Query Elements) (Query Elements)
+contains1 :: String -> Query Elements -> CypressM (Query Elements)
+contains1 = naskC2 contains1Fn
+
+foreign import contains2Fn :: EffectFn3 String String (Query Elements) (Query Elements)
+contains2 :: String -> String -> Query Elements -> CypressM (Query Elements)
+contains2 = naskC3 contains2Fn
 
 foreign import dblclickFn :: EffectFn1 (Query Elements) (Query Elements)
 dblclick :: Query Elements -> CypressM (Query Elements)
