@@ -189,9 +189,10 @@ foreign import hashFn :: EffectFn1 Cy String
 hash :: CypressM String
 hash = askC1 hashFn
 
-foreign import hoverFn :: EffectFn1 (Query Elements) (Query Elements)
-hover :: (Query Elements) -> CypressM (Query Elements)
-hover = naskC1 hoverFn
+--  'cy doesnt have hover'
+-- foreign import hoverFn :: EffectFn1 (Query Elements) (Query Elements)
+-- hover :: (Query Elements) -> CypressM (Query Elements)
+-- hover = naskC1 hoverFn
 
 -- foreign import invokeFn :: EffectFn2 String Cy Unit
 -- invoke :: String -> CypressM Unit
