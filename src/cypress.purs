@@ -71,14 +71,17 @@ foreign import clearFn :: EffectFn1 (Query Elements) (Query Elements)
 clear :: (Query Elements) -> CypressM (Query Elements)
 clear = naskC1 clearFn
 
+-- root
 foreign import clearCookieFn :: EffectFn2 String Cy Unit
 clearCookie :: String -> CypressM Unit
 clearCookie = askC2 clearCookieFn
 
+-- root
 foreign import clearCookiesFn :: EffectFn1 Cy Unit
 clearCookies :: CypressM Unit
 clearCookies = askC1 clearCookiesFn
 
+-- root
 foreign import clearLocalStorageFn :: EffectFn2 String Cy Unit
 clearLocalStorage :: String -> CypressM Unit
 clearLocalStorage = askC2 clearLocalStorageFn
@@ -87,6 +90,7 @@ foreign import clickFn :: EffectFn1 (Query Elements) (Query Elements)
 click :: Query Elements -> CypressM (Query Elements)
 click = naskC1 clickFn
 
+-- root
 foreign import clockFn :: EffectFn1 Cy (Clock)
 clock :: CypressM Clock
 clock = askC1 clockFn
@@ -107,10 +111,12 @@ foreign import dblclickFn :: EffectFn1 (Query Elements) (Query Elements)
 dblclick :: Query Elements -> CypressM (Query Elements)
 dblclick = naskC1 dblclickFn
 
+-- both
 foreign import debugFn :: EffectFn1 Cy Unit
 debug :: CypressM Unit
 debug = askC1 debugFn
 
+-- root
 foreign import documentFn :: EffectFn1 Cy (Query Document)
 document :: CypressM (Query Document)
 document = askC1 documentFn
@@ -127,6 +133,7 @@ foreign import eqFn :: EffectFn2 Int (Query Elements) (Query Elements)
 eq :: Int -> Query Elements -> CypressM (Query Elements)
 eq = naskC2 eqFn
 
+-- root
 foreign import execFn :: EffectFn2 String Cy Exec
 exec :: String -> CypressM Exec
 exec = askC2 execFn
@@ -143,6 +150,7 @@ foreign import firstFn :: forall a. EffectFn1 (Query a) (Query a)
 first :: forall a. (Query a) -> CypressM (Query a)
 first = naskC1 firstFn
 
+--  root
 foreign import fixtureFn :: EffectFn2 String Cy Foreign
 fixture :: String -> CypressM Foreign
 fixture = askC2 fixtureFn
@@ -151,26 +159,32 @@ foreign import focusFn :: EffectFn1 (Query Elements) (Query Elements)
 focus :: Query Elements -> CypressM (Query Elements)
 focus = naskC1 focusFn
 
+-- root
 foreign import focusedFn :: EffectFn1 Cy (Query Elements)
 focused :: CypressM (Query Elements)
 focused = askC1 focusedFn
 
+-- root
 foreign import getFn :: EffectFn2 String Cy (Query Elements)
 get :: String -> CypressM (Query Elements)
 get = askC2 getFn
 
+--  root
 foreign import getCookieFn :: EffectFn2 String Cy String
 getCookie :: String -> CypressM String
 getCookie = askC2 getCookieFn
 
+--  root
 foreign import getCookiesFn :: EffectFn1 Cy String
 getCookies :: CypressM String
 getCookies = askC1 getCookiesFn
 
+--  root
 foreign import goFn :: EffectFn2 String Cy Unit
 go :: String -> CypressM Unit
 go = askC2 goFn
 
+--root
 foreign import hashFn :: EffectFn1 Cy String
 hash :: CypressM String
 hash = askC1 hashFn
@@ -191,10 +205,12 @@ foreign import lastFn :: EffectFn1 (Query Elements) (Query Elements)
 last :: (Query Elements) -> CypressM (Query Elements)
 last = naskC1 lastFn
 
+-- root
 foreign import locationFn :: EffectFn1 Cy Location
 location :: CypressM Location
 location = askC1 locationFn
 
+-- root
 foreign import logFn :: EffectFn2 String Cy Unit
 log :: String -> CypressM Unit
 log = askC2 logFn
@@ -227,6 +243,7 @@ foreign import parentsUntilFn :: EffectFn2 String (Query Elements) (Query Elemen
 parentsUntil :: String -> (Query Elements) -> CypressM (Query Elements)
 parentsUntil = naskC2 parentsUntilFn
 
+--  both
 foreign import pauseFn :: EffectFn1 Cy Unit
 pause :: CypressM Unit
 pause = askC1 pauseFn
@@ -243,14 +260,17 @@ foreign import prevUntilFn :: EffectFn2 String (Query Elements) (Query Elements)
 prevUntil :: String -> (Query Elements) -> CypressM (Query Elements)
 prevUntil = naskC2 prevUntilFn
 
+-- root
 foreign import readFileFn :: EffectFn2 String Cy Foreign
 readFile :: String -> CypressM Foreign
 readFile = askC2 readFileFn
 
+-- root
 foreign import reloadFn :: EffectFn1 Cy Unit
 reload :: CypressM Unit
 reload = askC1 reloadFn
 
+-- root
 -- foreign import requestFn :: EffectFn2 String Cy Unit
 -- request :: String -> CypressM Unit
 -- request = askC2 requestFn
@@ -259,14 +279,17 @@ foreign import rightclickFn :: EffectFn1 (Query Elements) (Query Elements)
 rightclick :: Query Elements -> CypressM (Query Elements)
 rightclick = naskC1 rightclickFn
 
+-- root
 -- foreign import rootFn :: EffectFn1 Cy Query
 -- root :: CypressM Query
 -- root = askC1 rootFn
 
+-- root
 -- foreign import routeFn :: EffectFn2 String Cy Unit
 -- route :: String -> CypressM Unit
 -- route = askC2 routeFn
 
+-- both
 foreign import screenshotFn :: EffectFn1 Cy Unit
 screenshot :: CypressM Unit
 screenshot = askC1 screenshotFn
@@ -275,6 +298,7 @@ foreign import scrollIntoViewFn :: EffectFn1 (Query Elements) (Query Elements)
 scrollIntoView :: (Query Elements) -> CypressM (Query Elements)
 scrollIntoView = naskC1 scrollIntoViewFn
 
+-- both
 -- foreign import scrollToFn :: EffectFn2 String Cy Unit
 -- scrollTo :: String -> CypressM Unit
 -- scrollTo = askC2 scrollToFn
@@ -283,10 +307,12 @@ foreign import selectFn :: EffectFn2 String (Query Elements) (Query Elements)
 select :: String -> (Query Elements) -> CypressM (Query Elements)
 select = naskC2 selectFn
 
+-- root
 -- foreign import serverFn :: EffectFn2 String Cy Unit
 -- server :: String -> CypressM Unit
 -- server = askC2 serverFn
 
+-- root
 foreign import setCookieFn :: EffectFn3 String String Cy Cookie
 setCookie :: String -> String -> CypressM Cookie
 setCookie = askC3 setCookieFn
@@ -303,18 +329,22 @@ siblings = naskC1 siblingsFn
 -- spread :: String -> CypressM Unit
 -- spread = askC2 spreadFn
 
+-- root
 -- foreign import spyFn :: EffectFn2 String Cy Unit
 -- spy :: String -> CypressM Unit
 -- spy = askC2 spyFn
 
+-- root
 -- foreign import stubFn :: EffectFn2 String Cy Unit
 -- stub :: String -> CypressM Unit
 -- stub = askC2 stubFn
 
+-- must be form
 foreign import submitFn :: EffectFn1 (Query Elements) (Query Elements)
 submit :: (Query Elements) -> CypressM (Query Elements)
 submit = naskC1 submitFn
 
+-- root
 -- foreign import taskFn :: EffectFn2 String Cy Unit
 -- task :: String -> CypressM Unit
 -- task = askC2 taskFn
@@ -323,10 +353,12 @@ foreign import thenFn :: forall a b. EffectFn2 (a -> b) a b
 thn :: forall a b. (a -> b) -> a -> CypressM b
 thn = naskC2 thenFn
 
+-- root
 foreign import tickFn :: EffectFn2 Int Cy Clock
 tick :: Int -> CypressM Clock
 tick = askC2 tickFn
 
+-- root
 foreign import titleFn :: EffectFn1 Cy (Query String)
 title :: CypressM (Query String)
 title = askC1 titleFn
@@ -343,35 +375,41 @@ foreign import uncheckFn :: EffectFn1 (Query Elements) (Query Elements)
 uncheck :: (Query Elements) -> CypressM (Query Elements)
 uncheck = naskC1 uncheckFn
 
+--  root
 foreign import urlFn :: EffectFn1 Cy String
 url :: CypressM String
 url = askC1 urlFn
 
+-- root
 foreign import viewportFn :: EffectFn3 Int Int Cy Unit
 viewport :: Int -> Int -> CypressM Unit
 viewport = askC3 viewportFn
 
+-- root
 foreign import visitFn :: EffectFn2 String Cy Unit
 visit :: String -> CypressM Unit
 visit = askC2 visitFn
 
+-- root
 foreign import waitFn :: EffectFn2 Int Cy Unit
 wait :: Int -> CypressM Unit
 wait = askC2 waitFn
 
+-- root
 foreign import windowFn :: EffectFn1 Cy Window
 window :: CypressM Window
 window = askC1 windowFn
-
 
 foreign import withinFn :: forall a b. EffectFn3 ((Query a) -> (Query b)) (Query a) Cy (Query b)
 within :: forall a b. ((Query a) -> (Query b)) -> (Query a) -> CypressM (Query b)
 within = askC3 withinFn
 
+-- root
 foreign import wrapFn :: forall a. EffectFn2 a Cy (Query a)
 wrap :: forall a. a -> CypressM (Query a)
 wrap = askC2 wrapFn
 
+-- root
 -- foreign import writeFileFn :: EffectFn2 String Cy Unit
 -- writeFile :: String -> CypressM Unit
 -- writeFile = askC2 writeFileFn
