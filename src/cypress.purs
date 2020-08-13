@@ -12,6 +12,8 @@ import Partial.Unsafe (unsafePartial)
 
 import Cypress.Ask
 
+fromJust = unsafePartial M.fromJust
+
 foreign import data Cy :: Type
 
 newtype Elements = Elements Foreign
