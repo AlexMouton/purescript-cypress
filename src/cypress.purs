@@ -2,10 +2,13 @@ module Cypress where
 
 import Prelude
 -- import Data.Functor (class Functor)
+import Control.Monad.Reader.Trans (ReaderT, runReaderT)
+import Data.Maybe (Maybe, isJust)
+import Data.Maybe as M
 import Effect (Effect)
-import Effect.Uncurried (EffectFn1, runEffectFn1, EffectFn2, runEffectFn2, EffectFn3, runEffectFn3)
+import Effect.Uncurried (EffectFn1, EffectFn2, EffectFn3, EffectFn4, EffectFn5)
 import Foreign (Foreign)
-import Control.Monad.Reader.Trans (runReaderT, ReaderT(..), ask)
+import Partial.Unsafe (unsafePartial)
 
 import Cypress.Ask
 
@@ -99,13 +102,24 @@ foreign import closestFn :: EffectFn2 String (Query Elements) (Query Elements)
 closest :: String -> Query Elements -> CypressM (Query Elements)
 closest = naskC2 closestFn
 
-foreign import contains1Fn :: EffectFn2 String (Query Elements) (Query Elements)
-contains1 :: String -> Query Elements -> CypressM (Query Elements)
-contains1 = naskC2 contains1Fn
+-- Contains [both]
 
-foreign import contains2Fn :: EffectFn3 String String (Query Elements) (Query Elements)
-contains2 :: String -> String -> Query Elements -> CypressM (Query Elements)
-contains2 = naskC3 contains2Fn
+type ContainsOptions = {
+  matchCase :: Boolean, -- true 	Check case sensitivity
+  log :: Boolean,  -- true 	Displays the command in the Command log
+  timeout :: Int -- defaultCommandTimeout 	Time to wait for .contains() to resolve before timing outy
+}
+
+type ContainsProps = { content :: String, selector :: Maybe String, options :: Maybe ContainsOptions }
+
+foreign import containsFn :: forall a. EffectFn4 (Maybe a -> Boolean) (Maybe a -> a) ContainsProps Cy (Query Elements)
+foreign import containsqFn :: forall a. EffectFn5 (Maybe a -> Boolean) (Maybe a -> a) ContainsProps (Query Elements) Cy (Query Elements)
+
+contains :: ContainsProps -> CypressM (Query Elements)
+contains = askC4 containsFn isJust fromJust
+
+containsq :: ContainsProps -> Query Elements -> CypressM (Query Elements)
+containsq = askC5 containsqFn isJust fromJust
 
 foreign import dblclickFn :: EffectFn1 (Query Elements) (Query Elements)
 dblclick :: Query Elements -> CypressM (Query Elements)

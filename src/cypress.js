@@ -16,8 +16,26 @@ exports.clockFn = function clockFn(cy) { return cy.clock();  }
 exports.closestFn = function closestFn(a, cy) { return cy.closest(a);  }
 
 // both
-exports.contains1Fn = function contains1Fn(a, cy) { return cy.contains(a);  }
-exports.contains2Fn = function contains2Fn(a, b, cy) { return cy.contains(a, b);  }
+const containsArgs = (isJust, fromJust, props) => {
+  if(isJust(props.selector)) {
+    const selector = fromJust(props.selector);
+    const options = isJust(props.options) ? fromJust(props.options) : undefined;
+    return [selector, props.content, options];
+  }
+  else {
+    const options = isJust(props.options) ? fromJust(props.options) : undefined;
+    return [props.content, options];
+  }
+};
+
+exports.containsFn = (isJust, fromJust, props, cy) => {
+  return cy.contains(...containsArgs(isJust, fromJust, props))
+}
+
+exports.containsqFn = (isJust, fromJust, props, q, cy) => {
+  return q.contains(...containsArgs(isJust, fromJust, props))
+}
+
 exports.dblclickFn = function dblclickFn(cy) { return cy.dblclick();  }
 // both
 exports.debugFn = function debugFn(a, cy) { return cy.debug(a);  }
