@@ -23,13 +23,6 @@ newtype Clock = Clock Foreign
 
 data Query a = Query a
 
-type Exec = Foreign
--- {
---   code: 0,
---   stdout: "Files successfully built",
---   stderr: ""
--- }
-
 type Location = Foreign
 
 type Cookie = Foreign
@@ -150,8 +143,14 @@ eq :: Int -> Query Elements -> CypressM (Query Elements)
 eq = naskC2 eqFn
 
 -- root
-foreign import execFn :: EffectFn2 String Cy Exec
-exec :: String -> CypressM Exec
+type ResultExec =
+  { code :: Int
+  , stdout :: String
+  , stderr :: String
+  }
+
+foreign import execFn :: EffectFn2 String Cy ResultExec
+exec :: String -> CypressM ResultExec
 exec = askC2 execFn
 
 foreign import filterFn :: EffectFn2 String (Query Elements) (Query Elements)
