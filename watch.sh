@@ -1,1 +1,1 @@
-spago bundle-module --watch -t ./cypress/integration/ps.js
+spago bundle-module --watch -m Test.Main -t ./cypress/integration/ps.js
