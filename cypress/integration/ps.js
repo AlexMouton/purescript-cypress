@@ -508,9 +508,9 @@ var PS = {};
           return v.value0;
       };
       if (v instanceof Alias) {
-          return v.value0;
+          return "@" + v.value0;
       };
-      throw new Error("Failed pattern match at Cypress (line 195, column 16 - line 197, column 15): " + [ v.constructor.name ]);
+      throw new Error("Failed pattern match at Cypress (line 195, column 16 - line 197, column 22): " + [ v.constructor.name ]);
   };
   var get = Cypress_Ask.askC5($foreign.getFn)(Data_Maybe.isJust)(fromJust)(actionString);
   exports["runCypress"] = runCypress;

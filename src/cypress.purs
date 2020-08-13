@@ -191,7 +191,7 @@ data GetAction = Selector String | Alias String
 actionString :: GetAction -> String
 actionString = case _ of
   Selector a -> a
-  Alias a -> a
+  Alias a -> "@" <> a
 
 type GetProps = { action :: GetAction, options :: Maybe GetOptions }
 
