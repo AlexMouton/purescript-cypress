@@ -55,7 +55,12 @@ exports.focusFn = function focusFn(a, cy) { return cy.focus(a);  }
 // root
 exports.focusedFn = function focusedFn(a, cy) { return cy.focused(a);  }
 // root
-exports.getFn = function getFn(path, cy) { return cy.get(path); }
+exports.getFn = function getFn(isJust, fromJust, actionString, props, cy) {
+  const action = actionString(props.action);
+  const options = isJust(props.options) ? fromJust(props.options) : undefined;
+  return cy.get(action, options);
+}
+
 // root
 exports.getCookieFn = function getCookieFn(a, cy) { return cy.getCookie(a);  }
 // root

@@ -180,9 +180,24 @@ focused :: CypressM (Query Elements)
 focused = askC1 focusedFn
 
 -- root
-foreign import getFn :: EffectFn2 String Cy (Query Elements)
-get :: String -> CypressM (Query Elements)
-get = askC2 getFn
+type GetOptions =
+  { log :: Maybe Boolean -- true 	Displays the command in the Command log
+  , timeout :: Maybe Int --  defaultCommandTimeout 	Time to wait for cy.get() to resolve before timing out
+  , withinSubject :: Maybe String -- null 	Element to search for children in. If null, search begins from root-level DOM element
+  }
+
+data GetAction = Selector String | Alias String
+
+actionString :: GetAction -> String
+actionString = case _ of
+  Selector a -> a
+  Alias a -> a
+
+type GetProps = { action :: GetAction, options :: Maybe GetOptions }
+
+foreign import getFn :: forall a. EffectFn5 (Maybe a -> Boolean) (Maybe a -> a) (GetAction -> String) GetProps Cy (Query Elements)
+get :: GetProps -> CypressM (Query Elements)
+get = askC5 getFn isJust fromJust actionString
 
 --  root
 foreign import getCookieFn :: EffectFn2 String Cy String

@@ -3,19 +3,22 @@ module Test.Main where
 import Prelude
 
 import Effect (Effect)
-import Cypress (Cy, CypressM, click, exec, first, get, go, runCypress, should, thn, typ, visit, (~))
+import Data.Maybe (Maybe(..))
+
+import Cypress
 import Cypress as C
 
 amazon :: CypressM Unit
 amazon = do
   visit "/"
-  _ <- get "a.a-carousel-goto-prevpage"
+  void $ get { action: Selector "a.a-carousel-goto-prevpage", options: Nothing }
     ~ should "have.length" 1
     ~ first
     ~ click
-  _ <- get "#twotabsearchtextbox"
+  void $ get { action: Selector "#twotabsearchtextbox", options: Nothing }
     ~ typ "HEHEHE"
   visit "/dp/B07X6C9RMF/ref=ods_gw_vicc_blinkmini_apr_anc"
+  void $ contains { content : "Blink Home Security", selector: Just "a", options: Nothing }
   go "back"
 
   exec "ls -la"
