@@ -334,8 +334,8 @@ scrollIntoView = naskC1 scrollIntoViewFn
 -- scrollTo :: String -> CypressM Unit
 -- scrollTo = askC2 scrollToFn
 
-foreign import selectFn :: EffectFn2 String (Query Elements) (Query Elements)
-select :: String -> (Query Elements) -> CypressM (Query Elements)
+foreign import selectFn :: EffectFn2 (Array String) (Query Elements) (Query Elements)
+select :: Array String -> (Query Elements) -> CypressM (Query Elements)
 select = naskC2 selectFn
 
 -- root

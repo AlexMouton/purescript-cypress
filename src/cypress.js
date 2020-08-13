@@ -101,7 +101,7 @@ exports.rightclickFn = function rightclickFn(cy) { return cy.rightclick();  }
 exports.screenshotFn = function screenshotFn(cy) { return cy.screenshot();  }
 exports.scrollIntoViewFn = function scrollIntoViewFn(a, cy) { return cy.scrollIntoView(a);  }
 // exports.scrollToFn = function scrollToFn(a, cy) { return cy.scrollTo(a);  }
-exports.selectFn = function selectFn(path, cy) { return cy.select(path); }
+exports.selectFn = function selectFn(values, cy) { return cy.select(values); }
 // exports.serverFn = function serverFn(a, cy) { return cy.server(a);  }
 // root
 exports.setCookieFn = function setCookieFn(a, b, cy) { return cy.setCookie(a, b);  }
