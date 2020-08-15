@@ -105,7 +105,11 @@ exports.selectFn = function selectFn(values, cy) { return cy.select(values); }
 // exports.serverFn = function serverFn(a, cy) { return cy.server(a);  }
 // root
 exports.setCookieFn = function setCookieFn(a, b, cy) { return cy.setCookie(a, b);  }
-exports.shouldFn = function shouldFn(a, b, c) { return c.should(a, b);  }
+
+exports.should0Fn = function should0Fn(a, b) { return b.should(a); }
+exports.should1Fn = function should1Fn(a, b, c) { return c.should(a, b); }
+exports.should2Fn = function should2Fn(a, b, c, d) { return d.should(a, b, c); }
+
 exports.siblingsFn = function siblingsFn(a, cy) { return cy.siblings(a);  }
 // exports.spreadFn = function spreadFn(a, cy) { return cy.spread(a);  }
 // exports.spyFn = function spyFn(a, cy) { return cy.spy(a);  }
