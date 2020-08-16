@@ -51,7 +51,6 @@ import Cypress.Query (Query)
 -- Satisfy(method)
 -- -- Aliases: satisfies	-- expect(1).to.satisfy((num) => { return num > 0 })
 -- Members(set)	-- expect([1, 2, 3]).to.include.members([3, 2])
--- OneOf(values)	-- expect(2).to.be.oneOf([1,2,3])
 -- Change(function)
 -- -- Aliases: changes	-- expect(fn).to.change(obj, 'val')
 -- Increase(function)
@@ -182,7 +181,14 @@ instance shouldWithin :: Ord a => Should (Within a) a where
 -- -- Aliases: eqls	-- expect({ name: 'Jane' }).to.eql({ name: 'Jane' })
 
 
+-- OneOf(values)	-- expect(2).to.be.oneOf([1,2,3])
+newtype OneOf a = OneOf (Array a)
+instance shouldStrOneOf :: ShouldStr (OneOf a) where
+  toStr _ = "be.oneOf"
 
+instance shouldOneOf :: Eq a => Should (OneOf a) a where
+  toShould a = toShould' (toStr a) a
+  toShould' s (OneOf is) = naskC3 should1Fn s is
 
 
 newtype LengthOf a = LengthOf Int
