@@ -41,7 +41,6 @@ import Cypress.Query (Query)
 -- OwnPropertyDescriptor(name)
 -- -- Aliases: haveOwnPropertyDescriptor	-- expect({a: 1}).to.have.ownPropertyDescriptor('a')
 -- LengthOf(value)	-- expect('test').to.have.lengthOf(3)
--- String(string)	-- expect('testing').to.have.string('test')
 -- Keys(key1, [key2], […])
 -- -- Aliases: key	-- expect({ pass: 1, fail: 2 }).to.have.keys('pass', 'fail')
 -- Throw(constructor)
@@ -97,6 +96,16 @@ instance shouldStrMatch :: ShouldStr Match where
 instance shouldMatch :: Should Match String where
   toShould a = toShould' (toStr a) a
   toShould' s (Match re) = naskC3 should1Fn s re
+
+
+-- String(string)	-- expect('testing').to.have.string('test')
+newtype SubString = SubString String
+instance shouldStrSubString :: ShouldStr SubString where
+  toStr _ = "to.have.string"
+
+instance shouldSubString :: Should SubString String where
+  toShould a = toShould' (toStr a) a
+  toShould' s (SubString sub) = naskC3 should1Fn s sub
 
 
 
