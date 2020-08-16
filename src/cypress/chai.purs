@@ -3,6 +3,8 @@ module Cypress.Chai where
 
 import Prelude
 
+import Data.String.Regex (Regex)
+
 import Cypress (CypressM)
 import Cypress.Ask (naskC2, naskC3, naskC4)
 import Cypress.Elements (Elements)
@@ -39,8 +41,6 @@ import Cypress.Query (Query)
 -- OwnPropertyDescriptor(name)
 -- -- Aliases: haveOwnPropertyDescriptor	-- expect({a: 1}).to.have.ownPropertyDescriptor('a')
 -- LengthOf(value)	-- expect('test').to.have.lengthOf(3)
--- Match(RegExp)
--- -- Aliases: matches	-- expect('testing').to.match(/^test/)
 -- String(string)	-- expect('testing').to.have.string('test')
 -- Keys(key1, [key2], […])
 -- -- Aliases: key	-- expect({ pass: 1, fail: 2 }).to.have.keys('pass', 'fail')
@@ -86,6 +86,17 @@ instance shouldStrFalse :: ShouldStr False where
 instance shouldFalse :: Should False Boolean where
   toShould a = toShould' (toStr a) a
   toShould' s False = naskC2 should0Fn s
+
+
+-- Match(RegExp)
+-- -- Aliases: matches	-- expect('testing').to.match(/^test/)
+newtype Match = Match Regex
+instance shouldStrMatch :: ShouldStr Match where
+  toStr _ = "to.match"
+
+instance shouldMatch :: Should Match String where
+  toShould a = toShould' (toStr a) a
+  toShould' s (Match re) = naskC3 should1Fn s re
 
 
 
