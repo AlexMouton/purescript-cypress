@@ -50,8 +50,6 @@ import Cypress.Query (Query)
 -- Itself	-- expect(Foo).itself.to.respondTo('bar')
 -- Satisfy(method)
 -- -- Aliases: satisfies	-- expect(1).to.satisfy((num) => { return num > 0 })
--- CloseTo(expected, delta)
--- -- Aliases: approximately	-- expect(1.5).to.be.closeTo(1, 0.5)
 -- Members(set)	-- expect([1, 2, 3]).to.include.members([3, 2])
 -- OneOf(values)	-- expect(2).to.be.oneOf([1,2,3])
 -- Change(function)
@@ -108,6 +106,15 @@ instance shouldSubString :: Should SubString String where
   toShould' s (SubString sub) = naskC3 should1Fn s sub
 
 
+-- CloseTo(expected, delta)
+-- -- Aliases: approximately	-- expect(1.5).to.be.closeTo(1, 0.5)
+data CloseTo = CloseTo Number Number
+instance shouldStrCloseTo :: ShouldStr CloseTo where
+  toStr _ = "be.closeTo"
+
+instance shouldCloseTo :: Should CloseTo Number where
+  toShould a = toShould' (toStr a) a
+  toShould' s (CloseTo a b) = naskC4 should2Fn s a b
 
 -- Equal(value)
 -- -- Aliases: equals, eq	-- expect(42).to.equal(42)
