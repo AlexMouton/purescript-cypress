@@ -22,8 +22,6 @@ import Cypress.Query (Query)
 -- Include(value)
 -- -- Aliases: contain, includes, contains	-- expect([1,2,3]).to.include(2)
 -- Ok	-- expect(undefined).to.not.be.ok
--- True	-- expect(true).to.be.true
--- False	-- expect(false).to.be.false
 -- Null	-- expect(null).to.be.null
 -- Undefined	-- expect(undefined).to.be.undefined
 -- Exist	-- expect(myVar).to.exist
@@ -40,7 +38,6 @@ import Cypress.Query (Query)
 -- HaveOwnProperty-- Aliases: haveOwnProperty, own.property	-- expect('test').to.have.ownProperty('length')
 -- OwnPropertyDescriptor(name)
 -- -- Aliases: haveOwnPropertyDescriptor	-- expect({a: 1}).to.have.ownPropertyDescriptor('a')
--- LengthOf(value)	-- expect('test').to.have.lengthOf(3)
 -- Keys(key1, [key2], […])
 -- -- Aliases: key	-- expect({ pass: 1, fail: 2 }).to.have.keys('pass', 'fail')
 -- Throw(constructor)
@@ -57,6 +54,7 @@ import Cypress.Query (Query)
 -- -- Aliases: increases	-- expect(fn).to.increase(obj, 'val')
 -- Decrease(function)
 -- -- Aliases: decreases	-- expect(fn).to.decrease(obj, 'val')
+
 
 class ShouldStr a where
   toStr ::  a -> String
@@ -117,6 +115,8 @@ instance shouldCloseTo :: Should CloseTo Number where
 
 -- Equal(value)
 -- -- Aliases: equals, eq	-- expect(42).to.equal(42)
+-- Eql(value)
+-- -- Aliases: eqls	-- expect({ name: 'Jane' }).to.eql({ name: 'Jane' })
 newtype Equal a = Equal a
 instance shouldStrEq :: ShouldStr (Equal a) where
   toStr _ = "equal"
@@ -138,7 +138,6 @@ instance shouldGreaterThan :: Ord a => Should (GreaterThan a) a where
 -- LessThan(value)
 -- Lt(value)
 -- Below(value) -- Aliases: lt, below	-- expect(5).to.be.lessThan(10)
-
 newtype LessThan a = LessThan a
 instance shouldStrLessThan :: ShouldStr (LessThan a) where
   toStr _ = "be.lessThan"
@@ -175,10 +174,6 @@ instance shouldStrWithin :: ShouldStr (Within a) where
 instance shouldWithin :: Ord a => Should (Within a) a where
   toShould a = toShould' (toStr a) a
   toShould' s (Within a b) = naskC4 should2Fn s a b
-
-
--- Eql(value)
--- -- Aliases: eqls	-- expect({ name: 'Jane' }).to.eql({ name: 'Jane' })
 
 
 -- OneOf(values)	-- expect(2).to.be.oneOf([1,2,3])
