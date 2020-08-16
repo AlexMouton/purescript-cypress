@@ -205,6 +205,15 @@ instance shouldLengthElements :: Should (LengthOf Elements) Elements where
   toShould' s (LengthOf i) = naskC3 should1Fn s i
 
 
+newtype Visible = Visible Unit
+instance shouldStrVisible :: ShouldStr Visible where
+  toStr _ = "be.visible"
+
+instance shouldVisible :: Should Visible Elements where
+  toShould a = toShould' (toStr a) a
+  toShould' s _ = naskC2 should0Fn s
+
+
 -- Not -- expect(name).to.not.equal('Jane')
 newtype Not a = Not a
 
