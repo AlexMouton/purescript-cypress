@@ -258,3 +258,6 @@ foreign import wrapFn :: forall a. EffectFn2 a Cy (Query a)
 -- root
 -- foreign import writeFileFn :: EffectFn2 String Cy Unit
 
+-- root
+foreign import xpathFn :: EffectFn2 String Cy (Query Elements)
+

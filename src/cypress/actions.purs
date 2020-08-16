@@ -311,3 +311,5 @@ wrap = askC2 wrapFn
 -- writeFile :: String -> CypressM Unit
 -- writeFile = askC2 writeFileFn
 
+xpath :: String -> CypressM (Query Elements)
+xpath = askC2 xpathFn

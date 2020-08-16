@@ -138,3 +138,5 @@ exports.windowFn = function windowFn(cy) { return cy.window();  }
 exports.withinFn = function withinFn(a, cy) { return cy.within(a);  }
 exports.wrapFn = function wrapFn(a, cy) { return cy.wrap(a);  }
 // exports.writeFileFn = function writeFileFn(a, cy) { return cy.writeFile(a);  }
+
+exports.xpathFn = function xpathFn(a, cy) { return cy.xpath(a); }
