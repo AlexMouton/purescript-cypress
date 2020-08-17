@@ -3,7 +3,7 @@ module Cypress.Ask where
 import Prelude
 -- import Data.Functor (class Functor)
 import Effect (Effect)
-import Effect.Uncurried (EffectFn1, runEffectFn1, EffectFn2, runEffectFn2, EffectFn3, runEffectFn3, EffectFn4, runEffectFn4, EffectFn5, runEffectFn5)
+import Effect.Uncurried (EffectFn1, runEffectFn1, EffectFn2, runEffectFn2, EffectFn3, runEffectFn3, EffectFn4, runEffectFn4, EffectFn5, runEffectFn5, EffectFn6, runEffectFn6)
 import Control.Monad.Reader.Trans (ReaderT(..), ask)
 
 askC1 :: forall b a. (EffectFn1 b a) -> ReaderT b Effect a
@@ -30,6 +30,11 @@ askC5 :: forall s t u v a b. (EffectFn5 s t u v b a) -> s -> t -> u -> v -> Read
 askC5 f s t u v = ReaderT $ do
   cy <- ask
   pure $ (runEffectFn5 f) s t u v cy
+
+askC6 :: forall s t u v w a b. (EffectFn6 s t u v w b a) -> s -> t -> u -> v -> w -> ReaderT b Effect a
+askC6 f s t u v w = ReaderT $ do
+  cy <- ask
+  pure $ (runEffectFn6 f) s t u v w cy
 
 
 naskC1 :: forall s a b. (EffectFn1 s a) -> s -> ReaderT b Effect a
