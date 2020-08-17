@@ -9,7 +9,7 @@ import Data.Maybe (Maybe)
 import Cypress.Ask (naskC1)
 import Cypress.Query (Query)
 import Cypress.Elements (Elements)
-import Cypress (Cy, CypressM)
+import Cypress.Cy (Cy, CypressM)
 
 newtype Clock = Clock Foreign
 
@@ -131,7 +131,7 @@ foreign import hashFn :: EffectFn1 Cy String
 --  'cy doesnt have hover'
 -- foreign import hoverFn :: EffectFn1 (Query Elements) (Query Elements)
 
--- foreign import invokeFn :: EffectFn2 String Cy Unit
+foreign import invokeFn :: EffectFn2 String Cy Unit
 
 -- foreign import itsFn :: EffectFn2 String Query Foreign
 
@@ -261,3 +261,4 @@ foreign import wrapFn :: forall a. EffectFn2 a Cy (Query a)
 -- root
 foreign import xpathFn :: forall a. EffectFn5 (Maybe a -> Boolean) (Maybe a -> a) String GetOptions Cy (Query Elements)
 
+foreign import attachFileFn :: EffectFn2 String (Query Elements) (Query Elements)

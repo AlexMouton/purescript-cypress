@@ -5,7 +5,7 @@ import Prelude
 
 import Data.String.Regex (Regex)
 
-import Cypress (CypressM)
+import Cypress.Cy (CypressM)
 import Cypress.Ask (naskC2, naskC3, naskC4)
 import Cypress.Elements (Elements)
 import Cypress.Foreign (should0Fn, should1Fn, should2Fn)

@@ -70,7 +70,9 @@ exports.goFn = function goFn(a, cy) { return cy.go(a);  }
 // root
 exports.hashFn = function hashFn(cy) { return cy.hash();  }
 // exports.hoverFn = function hoverFn(a, cy) { return cy.hover(a);  }
-// exports.invokeFn = function invokeFn(a, cy) { return cy.invoke(a);  }
+
+exports.invokeFn = function invokeFn(a, cy) { return cy.invoke(a);  }
+
 // exports.itsFn = function itsFn(a, cy) { return cy.its(a);  }
 exports.lastFn = function lastFn(a, cy) { return cy.last(a);  }
 // root
@@ -144,3 +146,4 @@ exports.xpathFn = function xpathFn(isJust, fromJust, s, opts, cy) {
   return cy.xpath(s, opts);
 }
 
+exports.attachFileFn = function attachFileFn(a, b, cy) { return b.attachFile(a); }
