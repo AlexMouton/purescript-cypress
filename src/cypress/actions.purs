@@ -16,6 +16,7 @@ import Cypress.Query
 import Cypress.Elements
 import Cypress.Chai
 
+fromJust :: forall a. Maybe a -> a
 fromJust = unsafePartial M.fromJust
 
 and :: forall a. String -> Int -> Query a -> CypressM (Query a)
@@ -115,8 +116,14 @@ actionString = case _ of
   Selector a -> a
   Alias a -> "@" <> a
 
-get :: GetProps -> CypressM (Query Elements)
-get = askC5 getFn isJust fromJust actionString
+getOpt :: GetProps -> CypressM (Query Elements)
+getOpt = askC5 getFn isJust fromJust actionString
+
+get :: String -> CypressM (Query Elements)
+get s = getOpt { action: Selector s, options: Nothing }
+
+alias :: String -> CypressM (Query Elements)
+alias s = getOpt { action: Alias s, options: Nothing }
 
 --  root
 getCookie :: String -> CypressM String
@@ -312,4 +319,8 @@ wrap = askC2 wrapFn
 -- writeFile = askC2 writeFileFn
 
 xpath :: String -> CypressM (Query Elements)
-xpath = askC2 xpathFn
+xpath s = xpathOpt s { log: Just false, timeout: Nothing, withinSubject: Nothing }
+
+xpathOpt :: String -> GetOptions -> CypressM (Query Elements)
+xpathOpt = askC5 xpathFn isJust fromJust
+
