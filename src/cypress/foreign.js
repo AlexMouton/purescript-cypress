@@ -146,4 +146,7 @@ exports.xpathFn = function xpathFn(isJust, fromJust, s, opts, cy) {
   return cy.xpath(s, opts);
 }
 
-exports.attachFileFn = function attachFileFn(a, b, cy) { return b.attachFile(a); }
+exports.attachFileFn = function attachFileFn(isJust, fromJust, a, b, opts) {
+  const options = isJust(opts) ? fromJust(opts) : undefined;
+  return b.attachFile(a, options);
+}

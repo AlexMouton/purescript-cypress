@@ -52,3 +52,7 @@ naskC3 f s t u = ReaderT $ do
 naskC4 :: forall s t u v a b. (EffectFn4 s t u v a) -> s -> t -> u -> v -> ReaderT b Effect a
 naskC4 f s t u v = ReaderT $ do
   pure $ (runEffectFn4 f) s t u v
+
+naskC5 :: forall s t u v w a b. (EffectFn5 s t u v w a) -> s -> t -> u -> v -> w -> ReaderT b Effect a
+naskC5 f s t u v w = ReaderT $ do
+  pure $ (runEffectFn5 f) s t u v w

@@ -261,4 +261,4 @@ foreign import wrapFn :: forall a. EffectFn2 a Cy (Query a)
 -- root
 foreign import xpathFn :: forall a. EffectFn5 (Maybe a -> Boolean) (Maybe a -> a) String GetOptions Cy (Query Elements)
 
-foreign import attachFileFn :: EffectFn2 String (Query Elements) (Query Elements)
+foreign import attachFileFn :: forall a. EffectFn5 (Maybe a -> Boolean) (Maybe a -> a) String (Maybe { subjectType :: String }) (Query Elements) (Query Elements)

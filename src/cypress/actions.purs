@@ -2,15 +2,15 @@ module Cypress.Actions where
 
 import Prelude
 
-import Cypress.Ask (askC1, askC2, askC3, askC4, askC5, naskC1, naskC2, naskC3)
-import Cypress.Chai (class Should, toShould)
-import Cypress.Cy (CypressM)
-import Cypress.Elements (Elements)
-import Cypress.Foreign (Clock, ContainsProps, Cookie, Document, GetAction(..), GetOptions, GetProps, ResultExec, Window, andFn, asFn, blurFn, checkFn, childrenFn, clearCookieFn, clearCookiesFn, clearFn, clearLocalStorageFn, clickFn, clockFn, closestFn, containsFn, containsqFn, dblclickFn, debugFn, documentFn, endFn, eqFn, execFn, filterFn, findFn, firstFn, fixtureFn, focusFn, focusedFn, getCookieFn, getCookiesFn, getFn, goFn, hashFn, invokeFn, lastFn, locationFn, logFn, nextAllFn, nextFn, nextUntilFn, notFn, parentFn, parentsFn, parentsUntilFn, pauseFn, prevAllFn, prevFn, prevUntilFn, readFileFn, reloadFn, rightclickFn, screenshotFn, scrollIntoViewFn, selectFn, setCookieFn, siblingsFn, submitFn, thenFn, tickFn, titleFn, triggerFn, typeFn, uncheckFn, urlFn, viewportFn, visitFn, waitFn, windowFn, withinFn, wrapFn, xpathFn)
-import Cypress.Query (Query)
-import Data.Maybe (Maybe(..), isJust)
+import Cypress.Ask
+import Cypress.Chai
+import Cypress.Cy
+import Cypress.Elements
+import Cypress.Foreign
+import Cypress.Query
+import Data.Maybe
 import Data.Maybe as M
-import Foreign (Foreign)
+import Foreign
 import Partial.Unsafe (unsafePartial)
 
 fromJust :: forall a. Maybe a -> a
@@ -321,3 +321,8 @@ xpath s = xpathOpt s { log: Just false, timeout: Nothing, withinSubject: Nothing
 xpathOpt :: String -> GetOptions -> CypressM (Query Elements)
 xpathOpt = askC5 xpathFn isJust fromJust
 
+attachFile :: String -> (Query Elements) -> CypressM  (Query Elements)
+attachFile s = attachFileOpt s Nothing
+
+attachFileOpt :: String -> Maybe { subjectType :: String } -> (Query Elements) -> CypressM  (Query Elements)
+attachFileOpt = naskC5 attachFileFn isJust fromJust
