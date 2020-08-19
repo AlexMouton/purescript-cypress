@@ -3,7 +3,6 @@ module Test.Main where
 import Prelude
 
 import Effect (Effect)
-import Data.Maybe (Maybe(..))
 
 import Cypress
 import Cypress.Actions
@@ -21,7 +20,7 @@ amazon = do
   void $ get "#twotabsearchtextbox"
     ~ typ "HEHEHE"
   visit "/dp/B07X6C9RMF/ref=ods_gw_vicc_blinkmini_apr_anc"
-  void $ contains { content : "Blink Home Security", selector: Just "a", options: Nothing }
+  void $ containsSelector "a" "Blink Home Security"
   go "back"
 
   exec "ls -la"

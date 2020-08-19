@@ -77,11 +77,23 @@ closest :: String -> Query Elements -> CypressM (Query Elements)
 closest = naskC2 closestFn
 
 -- Contains [both]
-contains :: ContainsProps -> CypressM (Query Elements)
-contains = askC4 containsFn isJust fromJust
+contains :: String -> CypressM (Query Elements)
+contains s = containsOpt { selector: Nothing, content: s, options: Nothing }
 
-containsq :: ContainsProps -> Query Elements -> CypressM (Query Elements)
-containsq = askC5 containsqFn isJust fromJust
+containsSelector :: String -> String -> CypressM (Query Elements)
+containsSelector a b = containsOpt { selector: Just a, content: b, options: Nothing }
+
+containsOpt :: ContainsProps -> CypressM (Query Elements)
+containsOpt = askC4 containsFn isJust fromJust
+
+containsq :: String -> Query Elements -> CypressM (Query Elements)
+containsq a = containsqOpt { selector: Nothing, content: a, options: Nothing }
+
+containsqSelector :: String -> String -> Query Elements -> CypressM (Query Elements)
+containsqSelector a b = containsqOpt { selector: Just a, content: b, options: Nothing }
+
+containsqOpt :: ContainsProps -> Query Elements -> CypressM (Query Elements)
+containsqOpt = askC5 containsqFn isJust fromJust
 
 dblclick :: Query Elements -> CypressM (Query Elements)
 dblclick = naskC1 dblclickFn
