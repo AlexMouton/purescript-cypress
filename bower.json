@@ -17,6 +17,7 @@
         "purescript-console": "^v4.4.0",
         "purescript-effect": "^v2.0.1",
         "purescript-foreign": "^v5.0.0",
+        "purescript-jquery": "^v5.0.0",
         "purescript-psci-support": "^v4.0.0",
         "purescript-transformers": "^v4.2.0"
     }
