@@ -1,14 +1,14 @@
 module Cypress.Chai where
 
-
 import Prelude
 
 import Data.String.Regex (Regex)
+import Effect.Uncurried (EffectFn2, EffectFn3, EffectFn4)
 
 import Cypress.Cy (CypressM)
 import Cypress.Ask (naskC2, naskC3, naskC4)
 import Cypress.Elements (Elements)
-import Cypress.Foreign (should0Fn, should1Fn, should2Fn)
+-- import Cypress.Actions
 import Cypress.Query (Query)
 
 -- Deep	-- expect(obj).to.deep.equal({ name: 'Jane' })
@@ -63,7 +63,9 @@ class ShouldStr a <= Should a b where
   toShould :: a -> (Query b) -> CypressM (Query b)
   toShould' :: String -> a -> (Query b) -> CypressM (Query b)
 
-
+foreign import should0Fn :: forall a. EffectFn2 String (Query a) (Query a)
+foreign import should1Fn :: forall a b. EffectFn3 String b (Query a) (Query a)
+foreign import should2Fn :: forall a b. EffectFn4 String b b (Query a) (Query a)
 
 data True = True-- expect(true).to.be.true
 instance shouldStrTrue :: ShouldStr True where

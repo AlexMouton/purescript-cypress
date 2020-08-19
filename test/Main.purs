@@ -5,12 +5,10 @@ import Prelude
 import Effect (Effect)
 import Data.Maybe (Maybe(..))
 
-import Cypress.Cy
+import Cypress
 import Cypress.Actions
 import Cypress.Actions as C
-import Cypress.Foreign
 import Cypress.Chai (LengthOf(..), Not(..))
-import Cypress.Elements
 
 amazon :: CypressM Unit
 amazon = do

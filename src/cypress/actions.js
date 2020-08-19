@@ -1,5 +1,6 @@
 exports.andFn = function andFn(a, cy) { return cy.and(a);  }
 exports.asFn = function asFn(a, cy) { return cy.as(a);  }
+exports.backFn = function backFn(cy) { return cy.back();  }
 exports.blurFn = function blurFn(a, cy) { return cy.blur(a);  }
 exports.checkFn = function checkFn(a, cy) { return cy.check(a);  }
 exports.childrenFn = function childrenFn(a, cy) { return cy.children(a);  }
