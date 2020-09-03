@@ -251,12 +251,12 @@ var PS = {};
   var exports = $PS["Cypress.Ask"];
   var Control_Monad_Reader_Trans = $PS["Control.Monad.Reader.Trans"];
   var naskC3 = function (f) {
-      return function (s) {
-          return function (t) {
-              return function (u) {
+      return function (a) {
+          return function (b) {
+              return function (c) {
                   return Control_Monad_Reader_Trans.ReaderT(function (cy) {
                       return function () {
-                          return f(s, t, u);
+                          return f(a, b, c);
                       };
                   });
               };
@@ -264,33 +264,33 @@ var PS = {};
       };
   };
   var naskC2 = function (f) {
-      return function (s) {
-          return function (t) {
+      return function (a) {
+          return function (b) {
               return Control_Monad_Reader_Trans.ReaderT(function (cy) {
                   return function () {
-                      return f(s, t);
+                      return f(a, b);
                   };
               });
           };
       };
   };
   var naskC1 = function (f) {
-      return function (s) {
+      return function (a) {
           return Control_Monad_Reader_Trans.ReaderT(function (cy) {
               return function () {
-                  return f(s);
+                  return f(a);
               };
           });
       };
   };
   var askC5 = function (f) {
-      return function (s) {
-          return function (t) {
-              return function (u) {
-                  return function (v) {
+      return function (a) {
+          return function (b) {
+              return function (c) {
+                  return function (d) {
                       return Control_Monad_Reader_Trans.ReaderT(function (cy) {
                           return function () {
-                              return f(s, t, u, v, cy);
+                              return f(a, b, c, d, cy);
                           };
                       });
                   };
@@ -299,12 +299,12 @@ var PS = {};
       };
   };
   var askC4 = function (f) {
-      return function (s) {
-          return function (t) {
-              return function (u) {
+      return function (a) {
+          return function (b) {
+              return function (c) {
                   return Control_Monad_Reader_Trans.ReaderT(function (cy) {
                       return function () {
-                          return f(s, t, u, cy);
+                          return f(a, b, c, cy);
                       };
                   });
               };
@@ -312,10 +312,10 @@ var PS = {};
       };
   };
   var askC2 = function (f) {
-      return function (s) {
+      return function (a) {
           return Control_Monad_Reader_Trans.ReaderT(function (cy) {
               return function () {
-                  return f(s, cy);
+                  return f(a, cy);
               };
           });
       };

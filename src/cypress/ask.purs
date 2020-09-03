@@ -6,35 +6,37 @@ import Effect (Effect)
 import Effect.Uncurried (EffectFn1, runEffectFn1, EffectFn2, runEffectFn2, EffectFn3, runEffectFn3, EffectFn4, runEffectFn4, EffectFn5, runEffectFn5, EffectFn6, runEffectFn6)
 import Control.Monad.Reader.Trans (ReaderT(..), ask)
 
-askC1 :: forall b a. (EffectFn1 b a) -> ReaderT b Effect a
+askC1 :: forall r o. (EffectFn1 r o) -> ReaderT r Effect o
 askC1 f = ReaderT $ (\cy -> (runEffectFn1 f) cy)
 
-askC2 :: forall s a b. (EffectFn2 s b a) -> s -> ReaderT b Effect a
-askC2 f s = ReaderT $ (\cy -> (runEffectFn2 f) s cy)
+askC2 :: forall a o r. (EffectFn2 a r o) -> a -> ReaderT r Effect o
+askC2 f a = ReaderT $ (\cy -> (runEffectFn2 f) a cy)
 
-askC3 :: forall s t a b. (EffectFn3 s t b a) -> s -> t -> ReaderT b Effect a
-askC3 f s t = ReaderT $ (\cy -> (runEffectFn3 f) s t cy)
+askC3 :: forall a b o r. (EffectFn3 a b r o) -> a -> b -> ReaderT r Effect o
+askC3 f a b = ReaderT $ (\cy -> (runEffectFn3 f) a b cy)
 
-askC4 :: forall s t u a b. (EffectFn4 s t u b a) -> s -> t -> u -> ReaderT b Effect a
-askC4 f s t u = ReaderT $ (\cy -> (runEffectFn4 f) s t u cy)
+askC4 :: forall a b c o r. (EffectFn4 a b c r o) -> a -> b -> c -> ReaderT r Effect o
+askC4 f a b c = ReaderT $ (\cy -> (runEffectFn4 f) a b c cy)
 
-askC5 :: forall s t u v a b. (EffectFn5 s t u v b a) -> s -> t -> u -> v -> ReaderT b Effect a
-askC5 f s t u v = ReaderT $ (\cy -> (runEffectFn5 f) s t u v cy)
+askC5 :: forall a b c d o r. (EffectFn5 a b c d r o) -> a -> b -> c -> d -> ReaderT r Effect o
+askC5 f a b c d = ReaderT $ (\cy -> (runEffectFn5 f) a b c d cy)
 
-askC6 :: forall s t u v w a b. (EffectFn6 s t u v w b a) -> s -> t -> u -> v -> w -> ReaderT b Effect a
-askC6 f s t u v w = ReaderT $ (\cy -> (runEffectFn6 f) s t u v w cy)
+askC6 :: forall a b c d e o r. (EffectFn6 a b c d e r o) -> a -> b -> c -> d -> e -> ReaderT r Effect o
+askC6 f a b c d e = ReaderT $ (\cy -> (runEffectFn6 f) a b c d e cy)
 
-naskC1 :: forall s a b. (EffectFn1 s a) -> s -> ReaderT b Effect a
-naskC1 f s = ReaderT $ (\cy -> (runEffectFn1 f) s)
 
-naskC2 :: forall s t a b. (EffectFn2 s t a) -> s -> t -> ReaderT b Effect a
-naskC2 f s t = ReaderT $ (\cy -> (runEffectFn2 f) s t)
 
-naskC3 :: forall s t u a b. (EffectFn3 s t u a) -> s -> t -> u -> ReaderT b Effect a
-naskC3 f s t u = ReaderT $ (\cy -> (runEffectFn3 f) s t u)
+naskC1 :: forall a o r. (EffectFn1 a o) -> a -> ReaderT r Effect o
+naskC1 f a = ReaderT $ (\cy -> (runEffectFn1 f) a)
 
-naskC4 :: forall s t u v a b. (EffectFn4 s t u v a) -> s -> t -> u -> v -> ReaderT b Effect a
-naskC4 f s t u v = ReaderT $ (\cy -> (runEffectFn4 f) s t u v)
+naskC2 :: forall a b o r. (EffectFn2 a b o) -> a -> b -> ReaderT r Effect o
+naskC2 f a b = ReaderT $ (\cy -> (runEffectFn2 f) a b)
 
-naskC5 :: forall s t u v w a b. (EffectFn5 s t u v w a) -> s -> t -> u -> v -> w -> ReaderT b Effect a
-naskC5 f s t u v w = ReaderT $ (\cy -> (runEffectFn5 f) s t u v w)
+naskC3 :: forall a b c o r. (EffectFn3 a b c o) -> a -> b -> c -> ReaderT r Effect o
+naskC3 f a b c = ReaderT $ (\cy -> (runEffectFn3 f) a b c)
+
+naskC4 :: forall a b c d o r. (EffectFn4 a b c d o) -> a -> b -> c -> d -> ReaderT r Effect o
+naskC4 f a b c d = ReaderT $ (\cy -> (runEffectFn4 f) a b c d)
+
+naskC5 :: forall a b c d e o r. (EffectFn5 a b c d e o) -> a -> b -> c -> d -> e -> ReaderT r Effect o
+naskC5 f a b c d e = ReaderT $ (\cy -> (runEffectFn5 f) a b c d e)
