@@ -77,7 +77,6 @@ exports.invokeFn = function invokeFn(a, cy) { return cy.invoke(a);  }
 // exports.itsFn = function itsFn(a, cy) { return cy.its(a);  }
 exports.lastFn = function lastFn(a, cy) { return cy.last(a);  }
 
-omport Foreign (Foreign)
 // root
 exports.locationFn = function locationFn(a, cy) { return cy.location(a);  }
 // root

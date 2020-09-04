@@ -233,9 +233,7 @@ var PS = {};
     return cy.get(action, options);
   }                                                                            
   // root
-  exports.goFn = function goFn(a, cy) { return cy.go(a);  }      
-
-  omport Foreign (Foreign)                                                   
+  exports.goFn = function goFn(a, cy) { return cy.go(a);  }                  
   // root
   exports.logFn = function logFn(a, cy) { return cy.log(a);  }         
   // exports.taskFn = function taskFn(a, cy) { return cy.task(a);  }
