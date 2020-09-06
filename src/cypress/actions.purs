@@ -13,6 +13,7 @@ import Cypress.Chai
 import Cypress.Cy
 import Cypress.Elements
 import Cypress.Query
+import Cypress.Promise
 
 newtype Clock = Clock Foreign
 
@@ -31,122 +32,225 @@ type Cookie = Foreign
 --     sameSite (will only be returned if the experimentalGetCookiesSameSite configuration value is true)
 -- }
 
+type OptionsLft =
+  { log :: Boolean
+  , force :: Boolean
+  , timeout :: Int
+  }
+
+type OptionsLf =
+  { log :: Boolean
+  , force :: Boolean
+  }
+
+type OptionsLt =
+  { log :: Boolean
+  , timeout :: Int
+  }
+
+type OptionsL =
+  { log :: Boolean
+  }
 
 
 fromJust :: forall a. Maybe a -> a
 fromJust = unsafePartial M.fromJust
 
-foreign import andFn :: forall a. EffectFn3 String Int (Query a) (Query a)
-and :: forall a. String -> Int -> Query a -> CypressM (Query a)
-and = naskC3 andFn
+type IsJust a = (Maybe a -> Boolean)
+type FromJust a = (Maybe a -> a)
 
-foreign import asFn :: forall a. EffectFn2 String (Query a) (Query a)
-as :: forall a. String -> (Query a) -> CypressM (Query a)
-as = naskC2 asFn
+-- foreign import andFn :: forall a. EffectFnP4 String Int a Cy a
+-- and :: forall a. String -> Int -> a -> CypressM a
+-- and = askC4 andFn
 
-foreign import backFn :: EffectFn1 Cy Unit
-back :: CypressM Unit
-back = askC1 backFn
+-- foreign import asFn :: forall a. EffectFnP3 String a Cy a
+-- as :: forall a. String -> a -> CypressM a
+-- as = askC3 asFn
 
-foreign import blurFn :: EffectFn1 (Query Elements) (Query Elements)
-blur :: (Query Elements) -> CypressM (Query Elements)
-blur = naskC1 blurFn
+foreign import blurFn :: forall a. EffectFnP5 (IsJust a) (FromJust a) (Maybe OptionsLft) Elements Cy Elements
+blurOpt :: Maybe OptionsLft -> Elements -> CypressM Elements
+blurOpt = askC5 blurFn isJust fromJust
 
-foreign import checkFn :: EffectFn1 (Query Elements) (Query Elements)
-check :: (Query Elements) -> CypressM (Query Elements)
-check = naskC1 checkFn
+blur :: Elements -> CypressM Elements
+blur = blurOpt Nothing
 
-foreign import childrenFn :: EffectFn2 String (Query Elements) (Query Elements)
-children :: String -> (Query Elements) -> CypressM (Query Elements)
-children = naskC2 childrenFn
 
-foreign import clearFn :: EffectFn1 (Query Elements) (Query Elements)
-clear :: (Query Elements) -> CypressM (Query Elements)
-clear = naskC1 clearFn
+foreign import checkValsFn :: forall a. EffectFnP6 (IsJust a) (FromJust a) (Array String) (Maybe OptionsLft) Elements Cy Elements
+checkValsOpt :: Array String -> (Maybe OptionsLft) -> Elements -> CypressM Elements
+checkValsOpt = askC6 checkValsFn isJust fromJust
+
+checkVals a = checkValsOpt a Nothing
+
+checkValOpt :: String -> (Maybe OptionsLft) -> Elements -> CypressM Elements
+checkValOpt a = checkValsOpt [a]
+
+checkVal a = checkValOpt a Nothing
+
+
+foreign import checkFn :: forall a. EffectFnP5 (IsJust a) (FromJust a) (Maybe OptionsLft) Elements Cy Elements
+checkOpt :: Maybe OptionsLft -> Elements -> CypressM Elements
+checkOpt = askC5 checkFn isJust fromJust
+
+check = checkOpt Nothing
+
+
+foreign import childrenFn :: forall a. EffectFnP6 (IsJust a) (FromJust a) (Maybe String) (Maybe OptionsLf) Elements Cy Elements
+childrenOpt :: Maybe String -> Maybe OptionsLf -> Elements -> CypressM Elements
+childrenOpt =  askC6 childrenFn isJust fromJust
+
+children = childrenOpt Nothing Nothing
+
+
+foreign import clearFn :: forall a. EffectFnP5 (IsJust a) (FromJust a) (Maybe OptionsLft) Elements Cy Elements
+clearOpt :: Maybe OptionsLft -> Elements -> CypressM Elements
+clearOpt = askC5 clearFn isJust fromJust
+
+clear = clearOpt Nothing
+
 
 -- root
-foreign import clearCookieFn :: EffectFn2 String Cy Unit
+foreign import clearCookieFn :: forall a. EffectFnP5 (IsJust a) (FromJust a) String (Maybe OptionsLt) Cy Unit
+clearCookieOpt :: String -> (Maybe OptionsLt) -> CypressM Unit
+clearCookieOpt = askC5 clearCookieFn isJust fromJust
+
 clearCookie :: String -> CypressM Unit
-clearCookie = askC2 clearCookieFn
+clearCookie s = clearCookieOpt s Nothing
+
 
 -- root
-foreign import clearCookiesFn :: EffectFn1 Cy Unit
+foreign import clearCookiesFn :: forall a. EffectFnP4 (IsJust a) (FromJust a) (Maybe OptionsLt) Cy Unit
+clearCookiesOpt :: (Maybe OptionsLt) -> CypressM Unit
+clearCookiesOpt = askC4 clearCookiesFn isJust fromJust
+
 clearCookies :: CypressM Unit
-clearCookies = askC1 clearCookiesFn
+clearCookies = clearCookiesOpt Nothing
+
+
 
 -- root
-foreign import clearLocalStorageFn :: EffectFn2 String Cy Unit
+-- TODO: regex
+foreign import clearLocalStorageFn :: forall a. EffectFnP5 (IsJust a) (FromJust a) String (Maybe OptionsL) Cy Unit
+clearLocalStorageOpt :: String -> (Maybe OptionsL) -> CypressM Unit
+clearLocalStorageOpt = askC5 clearLocalStorageFn isJust fromJust
+
 clearLocalStorage :: String -> CypressM Unit
-clearLocalStorage = askC2 clearLocalStorageFn
+clearLocalStorage s = clearLocalStorageOpt s Nothing
 
-foreign import clickFn :: EffectFn1 (Query Elements) (Query Elements)
-click :: Query Elements -> CypressM (Query Elements)
-click = naskC1 clickFn
+
+type  ClickOptions =
+  { altKey :: Boolean
+  , ctrlKey :: Boolean
+  , log :: Boolean
+  , force :: Boolean
+  , metaKey :: Boolean
+  , multiple :: Boolean
+  , shiftKey :: Boolean
+  , timeout :: Number
+  }
+
+data Position = TopLeft | Top | TopRight | Left | Center | Right | BottomLeft | Bottom | BottomRight
+
+positionToString :: Position -> String
+positionToString = case _ of
+  TopLeft -> "topLeft"
+  Top -> "top"
+  TopRight -> "topRight"
+  Left -> "left"
+  Center -> "center"
+  Right -> "right"
+  BottomLeft -> "bottomLeft"
+  Bottom -> "bottom"
+  BottomRight -> "bottomRight"
+
+foreign import clickFn :: forall a. EffectFnP5 (IsJust a) (FromJust a) (Maybe ClickOptions) Elements Cy Elements
+clickOpt :: Maybe ClickOptions -> Elements -> CypressM Elements
+clickOpt =  askC5 clickFn isJust fromJust
+
+click :: Elements -> CypressM Elements
+click = clickOpt Nothing
+
+foreign import clickXyFn :: forall a. EffectFnP7 (IsJust a) (FromJust a) Number Number (Maybe ClickOptions) Elements Cy Elements
+clickXyOpt :: Number -> Number -> Maybe ClickOptions -> Elements -> CypressM Elements
+clickXyOpt = askC7 clickXyFn isJust fromJust
+
+clickXy :: Number -> Number -> Elements -> CypressM Elements
+clickXy x y = clickXyOpt x y Nothing
+
+
+foreign import clickPosFn :: forall a. EffectFnP6 (IsJust a) (FromJust a) String (Maybe ClickOptions) Elements Cy Elements
+clickPosOpt :: Position -> Maybe ClickOptions -> Elements -> CypressM Elements
+clickPosOpt p = askC6 clickPosFn isJust fromJust (positionToString p)
+
+clickPos :: Position -> Elements -> CypressM Elements
+clickPos p = clickPosOpt p Nothing
+
 
 -- root
-foreign import clockFn :: EffectFn1 Cy (Clock)
+foreign import clockFn :: EffectFnP1 Cy Clock
 clock :: CypressM Clock
 clock = askC1 clockFn
 
-foreign import closestFn :: EffectFn2 String (Query Elements) (Query Elements)
-closest :: String -> Query Elements -> CypressM (Query Elements)
-closest = naskC2 closestFn
 
--- Contains [both]
+foreign import closestFn :: EffectFnP3 String Elements Cy Elements
+closest :: String -> Elements -> CypressM Elements
+closest = askC3 closestFn
+
+
 -- Contains [both]
 type ContainsOptions = {
   matchCase :: Boolean, -- true 	Check case sensitivity
   log :: Boolean,  -- true 	Displays the command in the Command log
   timeout :: Int -- defaultCommandTimeout 	Time to wait for .contains() to resolve before timing outy
 }
+
 type ContainsProps = { content :: String, selector :: Maybe String, options :: Maybe ContainsOptions }
 
-foreign import containsFn :: forall a. EffectFn4 (Maybe a -> Boolean) (Maybe a -> a) ContainsProps Cy (Query Elements)
-foreign import containsqFn :: forall a. EffectFn5 (Maybe a -> Boolean) (Maybe a -> a) ContainsProps (Query Elements) Cy (Query Elements)
+foreign import containsFn :: forall a. EffectFnP4 (IsJust a) (FromJust a) ContainsProps Cy Elements
+foreign import containsqFn :: forall a. EffectFnP5 (IsJust a) (FromJust a) ContainsProps Elements Cy Elements
 
-contains :: String -> CypressM (Query Elements)
+contains :: String -> CypressM Elements
 contains s = containsOpt { selector: Nothing, content: s, options: Nothing }
 
-containsSelector :: String -> String -> CypressM (Query Elements)
+containsSelector :: String -> String -> CypressM Elements
 containsSelector a b = containsOpt { selector: Just a, content: b, options: Nothing }
 
-containsOpt :: ContainsProps -> CypressM (Query Elements)
+containsOpt :: ContainsProps -> CypressM Elements
 containsOpt = askC4 containsFn isJust fromJust
 
-containsq :: String -> Query Elements -> CypressM (Query Elements)
+containsq :: String -> Elements -> CypressM Elements
 containsq a = containsqOpt { selector: Nothing, content: a, options: Nothing }
 
-containsqSelector :: String -> String -> Query Elements -> CypressM (Query Elements)
+containsqSelector :: String -> String -> Elements -> CypressM Elements
 containsqSelector a b = containsqOpt { selector: Just a, content: b, options: Nothing }
 
-containsqOpt :: ContainsProps -> Query Elements -> CypressM (Query Elements)
+containsqOpt :: ContainsProps -> Elements -> CypressM Elements
 containsqOpt = askC5 containsqFn isJust fromJust
 
-foreign import dblclickFn :: EffectFn1 (Query Elements) (Query Elements)
-dblclick :: Query Elements -> CypressM (Query Elements)
-dblclick = naskC1 dblclickFn
+foreign import dblclickFn :: EffectFnP2 Elements Cy Elements
+dblclick :: Elements -> CypressM Elements
+dblclick = askC2 dblclickFn
 
 -- both
-foreign import debugFn :: EffectFn1 Cy Unit
-debug :: CypressM Unit
-debug = askC1 debugFn
+foreign import debugFn :: forall a. EffectFnP2 a Cy Unit
+debug :: forall a. a -> CypressM Unit
+debug = askC2 debugFn
 
 -- root
-foreign import documentFn :: EffectFn1 Cy (Query Document)
-document :: CypressM (Query Document)
+foreign import documentFn :: EffectFnP1 Cy Document
+document :: CypressM Document
 document = askC1 documentFn
 
--- foreign import eachFn :: EffectFn2 String Cy Unit
+-- foreign import eachFn :: EffectFnP2 String Cy Unit
 -- each :: String -> CypressM Unit
 -- each = askC2 eachFn
 
-foreign import endFn :: forall a. EffectFn1 (Query a) Unit
-end :: forall a. Query a -> CypressM Unit
-end = naskC1 endFn
+-- foreign import endFn :: forall a. EffectFnP2 a Cy Unit
+-- end :: forall a. a -> CypressM Unit
+-- end = askC2 endFn
 
-foreign import eqFn :: EffectFn2 Int (Query Elements) (Query Elements)
-eq :: Int -> Query Elements -> CypressM (Query Elements)
-eq = naskC2 eqFn
+-- foreign import eqFn :: EffectFnP2 Int Elements Elements
+-- eq :: Int -> Elements -> CypressM Elements
+-- eq = askC2 eqFn
 
 -- root
 type ResultExec =
@@ -155,34 +259,34 @@ type ResultExec =
   , stderr :: String
   }
 
-foreign import execFn :: EffectFn2 String Cy ResultExec
+foreign import execFn :: EffectFnP2 String Cy ResultExec
 exec :: String -> CypressM ResultExec
 exec = askC2 execFn
 
-foreign import filterFn :: EffectFn2 String (Query Elements) (Query Elements)
-filter :: String -> Query Elements -> CypressM (Query Elements)
-filter = naskC2 filterFn
+foreign import filterFn :: EffectFnP3 String Elements Cy Elements
+filter :: String -> Elements -> CypressM Elements
+filter = askC3 filterFn
 
-foreign import findFn :: EffectFn2 String (Query Elements) (Query Elements)
-find :: String -> (Query Elements) -> CypressM (Query Elements)
-find = naskC2 findFn
+foreign import findFn :: EffectFnP3 String Elements Cy Elements
+find :: String -> Elements -> CypressM Elements
+find = askC3 findFn
 
-foreign import firstFn :: forall a. EffectFn1 (Query a) (Query a)
-first :: forall a. (Query a) -> CypressM (Query a)
-first = naskC1 firstFn
+foreign import firstFn :: forall a. EffectFnP2 a Cy a
+first :: forall a. a -> CypressM a
+first = askC2 firstFn
 
 --  root
-foreign import fixtureFn :: EffectFn2 String Cy Foreign
+foreign import fixtureFn :: EffectFnP2 String Cy Foreign
 fixture :: String -> CypressM Foreign
 fixture = askC2 fixtureFn
 
-foreign import focusFn :: EffectFn1 (Query Elements) (Query Elements)
-focus :: Query Elements -> CypressM (Query Elements)
-focus = naskC1 focusFn
+foreign import focusFn :: EffectFnP2 Elements Cy Elements
+focus :: Elements -> CypressM Elements
+focus = askC2 focusFn
 
 -- root
-foreign import focusedFn :: EffectFn1 Cy (Query Elements)
-focused :: CypressM (Query Elements)
+foreign import focusedFn :: EffectFnP1 Cy Elements
+focused :: CypressM Elements
 focused = askC1 focusedFn
 
 -- root
@@ -196,279 +300,287 @@ data GetAction = Selector String | Alias String
 
 type GetProps = { action :: GetAction, options :: Maybe GetOptions }
 
-foreign import getFn :: forall a. EffectFn5 (Maybe a -> Boolean) (Maybe a -> a) (GetAction -> String) GetProps Cy (Query Elements)
+foreign import getFn :: forall a. EffectFnP5 (IsJust a) (FromJust a) (GetAction -> String) GetProps Cy Elements
 
 actionString :: GetAction -> String
 actionString = case _ of
   Selector a -> a
   Alias a -> "@" <> a
 
-getOpt :: GetProps -> CypressM (Query Elements)
+getOpt :: GetProps -> CypressM Elements
 getOpt = askC5 getFn isJust fromJust actionString
 
-get :: String -> CypressM (Query Elements)
+get :: String -> CypressM Elements
 get s = getOpt { action: Selector s, options: Nothing }
 
-alias :: String -> CypressM (Query Elements)
+alias :: String -> CypressM Elements
 alias s = getOpt { action: Alias s, options: Nothing }
 
 --  root
-foreign import getCookieFn :: EffectFn2 String Cy String
+foreign import getCookieFn :: EffectFnP2 String Cy String
 getCookie :: String -> CypressM String
 getCookie = askC2 getCookieFn
 
 --  root
-foreign import getCookiesFn :: EffectFn1 Cy String
-getCookies :: CypressM String
+foreign import getCookiesFn :: EffectFnP1 Cy Foreign
+getCookies :: CypressM Foreign
 getCookies = askC1 getCookiesFn
 
 --  root
-foreign import goFn :: EffectFn2 String Cy Unit
+
+foreign import goFn :: EffectFnP2 String Cy Unit
 go :: String -> CypressM Unit
 go = askC2 goFn
 
+back :: CypressM Unit
+back = go "back"
+
+forward :: CypressM Unit
+forward = go "forward"
+
 --root
-foreign import hashFn :: EffectFn1 Cy String
+foreign import hashFn :: EffectFnP1 Cy String
 hash :: CypressM String
 hash = askC1 hashFn
 
 --  'cy doesnt have hover'
--- foreign import hoverFn :: EffectFn1 (Query Elements) (Query Elements)
--- hover :: (Query Elements) -> CypressM (Query Elements)
--- hover = naskC1 hoverFn
+-- foreign import hoverFn :: EffectFnP1 Elements Elements
+-- hover :: Elements -> CypressM Elements
+-- hover = askC1 hoverFn
 
-foreign import invokeFn :: EffectFn2 String Cy Unit
-invoke :: String -> CypressM Unit
-invoke = askC2 invokeFn
+-- foreign import invokeFn :: EffectFnP2 String Cy Unit
+-- invoke :: String -> CypressM Unit
+-- invoke = askC2 invokeFn
 
--- foreign import itsFn :: EffectFn2 String Query Foreign
--- its :: String -> Query Elements -> CypressM String
+-- foreign import itsFn :: EffectFnP2 String Query Foreign
+-- its :: String -> Elements -> CypressM String
 -- its = askC2 itsFn
 
 -- root
-foreign import locationFn :: EffectFn1 Cy Location
+foreign import locationFn :: EffectFnP1 Cy Location
 location :: CypressM Location
 location = askC1 locationFn
 
 -- root
-foreign import logFn :: EffectFn2 String Cy Unit
+foreign import logFn :: EffectFnP2 String Cy Unit
 log :: String -> CypressM Unit
 log = askC2 logFn
 
-foreign import nextFn :: EffectFn1 (Query Elements) (Query Elements)
-next :: (Query Elements) -> CypressM (Query Elements)
-next = naskC1 nextFn
+foreign import nextFn :: EffectFnP2 Elements Cy Elements
+next :: Elements -> CypressM Elements
+next = askC2 nextFn
 
-foreign import nextAllFn :: EffectFn1 (Query Elements) (Query Elements)
-nextAll :: (Query Elements) -> CypressM (Query Elements)
-nextAll = naskC1 nextAllFn
+foreign import nextAllFn :: EffectFnP2 Elements Cy Elements
+nextAll :: Elements -> CypressM Elements
+nextAll = askC2 nextAllFn
 
-foreign import nextUntilFn :: EffectFn2 String (Query Elements) (Query Elements)
-nextUntil :: String -> (Query Elements) -> CypressM (Query Elements)
-nextUntil = naskC2 nextUntilFn
+foreign import nextUntilFn :: EffectFnP3 String Elements Cy Elements
+nextUntil :: String -> Elements -> CypressM Elements
+nextUntil = askC3 nextUntilFn
 
-foreign import notFn :: EffectFn2 String (Query Elements) (Query Elements)
-not :: String -> (Query Elements) -> CypressM (Query Elements)
-not = naskC2 notFn
+foreign import notFn :: EffectFnP3 String Elements Cy Elements
+not :: String -> Elements -> CypressM Elements
+not = askC3 notFn
 
-foreign import parentFn :: EffectFn1 (Query Elements) (Query Elements)
-parent :: (Query Elements) -> CypressM (Query Elements)
-parent = naskC1 parentFn
+foreign import parentFn :: EffectFnP2 Elements Cy Elements
+parent :: Elements -> CypressM Elements
+parent = askC2 parentFn
 
-foreign import parentsFn :: EffectFn1 (Query Elements) (Query Elements)
-parents :: (Query Elements) -> CypressM (Query Elements)
-parents = naskC1 parentsFn
+foreign import parentsFn :: EffectFnP2 Elements Cy Elements
+parents :: Elements -> CypressM Elements
+parents = askC2 parentsFn
 
-foreign import parentsUntilFn :: EffectFn2 String (Query Elements) (Query Elements)
-parentsUntil :: String -> (Query Elements) -> CypressM (Query Elements)
-parentsUntil = naskC2 parentsUntilFn
+foreign import parentsUntilFn :: EffectFnP3 String Elements Cy Elements
+parentsUntil :: String -> Elements -> CypressM Elements
+parentsUntil = askC3 parentsUntilFn
 
 --  both
-foreign import pauseFn :: EffectFn1 Cy Unit
+foreign import pauseFn :: EffectFnP1 Cy Unit
 pause :: CypressM Unit
 pause = askC1 pauseFn
 
-foreign import prevFn :: EffectFn1 (Query Elements) (Query Elements)
-prev :: (Query Elements) -> CypressM (Query Elements)
-prev = naskC1 prevFn
+foreign import prevFn :: EffectFnP2 Elements Cy Elements
+prev :: Elements -> CypressM Elements
+prev = askC2 prevFn
 
-foreign import prevAllFn :: EffectFn1 (Query Elements) (Query Elements)
-prevAll :: (Query Elements) -> CypressM (Query Elements)
-prevAll = naskC1 prevAllFn
+foreign import prevAllFn :: EffectFnP2 Elements Cy Elements
+prevAll :: Elements -> CypressM Elements
+prevAll = askC2 prevAllFn
 
 
-foreign import prevUntilFn :: EffectFn2 String (Query Elements) (Query Elements)
-prevUntil :: String -> (Query Elements) -> CypressM (Query Elements)
-prevUntil = naskC2 prevUntilFn
+foreign import prevUntilFn :: EffectFnP3 String Elements Cy Elements
+prevUntil :: String -> Elements -> CypressM Elements
+prevUntil = askC3 prevUntilFn
 
 -- root
-foreign import readFileFn :: EffectFn2 String Cy Foreign
+foreign import readFileFn :: EffectFnP2 String Cy Foreign
 readFile :: String -> CypressM Foreign
 readFile = askC2 readFileFn
 
 -- root
-foreign import reloadFn :: EffectFn1 Cy Unit
+foreign import reloadFn :: EffectFnP1 Cy Unit
 reload :: CypressM Unit
 reload = askC1 reloadFn
 
 -- root
--- foreign import requestFn :: EffectFn2 String Cy Unit
+-- foreign import requestFn :: EffectFnP2 String Cy Unit
 -- request :: String -> CypressM Unit
 -- request = askC2 requestFn
 
-foreign import rightclickFn :: EffectFn1 (Query Elements) (Query Elements)
-rightclick :: Query Elements -> CypressM (Query Elements)
-rightclick = naskC1 rightclickFn
+foreign import rightclickFn :: EffectFnP2 Elements Cy Elements
+rightclick :: Elements -> CypressM Elements
+rightclick = askC2 rightclickFn
 
 -- root
--- foreign import rootFn :: EffectFn1 Cy Query
+-- foreign import rootFn :: EffectFnP1 Cy Query
 -- root :: CypressM Query
 -- root = askC1 rootFn
 
 -- root
--- foreign import routeFn :: EffectFn2 String Cy Unit
+-- foreign import routeFn :: EffectFnP2 String Cy Unit
 -- route :: String -> CypressM Unit
 -- route = askC2 routeFn
 
 -- both
-foreign import screenshotFn :: EffectFn1 Cy Unit
+foreign import screenshotFn :: EffectFnP1 Cy Unit
 screenshot :: CypressM Unit
 screenshot = askC1 screenshotFn
 
-foreign import scrollIntoViewFn :: EffectFn1 (Query Elements) (Query Elements)
-scrollIntoView :: (Query Elements) -> CypressM (Query Elements)
-scrollIntoView = naskC1 scrollIntoViewFn
+foreign import scrollIntoViewFn :: EffectFnP2 Elements Cy Elements
+scrollIntoView :: Elements -> CypressM Elements
+scrollIntoView = askC2 scrollIntoViewFn
 
 -- both
--- foreign import scrollToFn :: EffectFn2 String Cy Unit
+-- foreign import scrollToFn :: EffectFnP2 String Cy Unit
 -- scrollTo :: String -> CypressM Unit
 -- scrollTo = askC2 scrollToFn
 
-foreign import selectFn :: EffectFn2 (Array String) (Query Elements) (Query Elements)
-select :: Array String -> (Query Elements) -> CypressM (Query Elements)
-select = naskC2 selectFn
+foreign import selectFn :: EffectFnP3 (Array String) Elements Cy Elements
+select :: Array String -> Elements -> CypressM Elements
+select = askC3 selectFn
 
 -- root
--- foreign import serverFn :: EffectFn2 String Cy Unit
+-- foreign import serverFn :: EffectFnP2 String Cy Unit
 -- server :: String -> CypressM Unit
 -- server = askC2 serverFn
 
 -- root
-foreign import setCookieFn :: EffectFn3 String String Cy Cookie
+foreign import setCookieFn :: EffectFnP3 String String Cy Cookie
 setCookie :: String -> String -> CypressM Cookie
 setCookie = askC3 setCookieFn
 
-should :: forall a b. Should a b => a -> Query b -> CypressM (Query b)
+should :: forall a b. Should a b => a -> b -> CypressM b
 should = toShould
 
-foreign import siblingsFn :: EffectFn1 (Query Elements) (Query Elements)
-siblings :: (Query Elements) -> CypressM (Query Elements)
-siblings = naskC1 siblingsFn
+foreign import siblingsFn :: EffectFnP2 Elements Cy Elements
+siblings :: Elements -> CypressM Elements
+siblings = askC2 siblingsFn
 
--- foreign import spreadFn :: EffectFn2 String Cy Unit
+-- foreign import spreadFn :: EffectFnP2 String Cy Unit
 -- spread :: String -> CypressM Unit
 -- spread = askC2 spreadFn
 
 -- root
--- foreign import spyFn :: EffectFn2 String Cy Unit
+-- foreign import spyFn :: EffectFnP2 String Cy Unit
 -- spy :: String -> CypressM Unit
 -- spy = askC2 spyFn
 
 -- root
--- foreign import stubFn :: EffectFn2 String Cy Unit
+-- foreign import stubFn :: EffectFnP2 String Cy Unit
 -- stub :: String -> CypressM Unit
 -- stub = askC2 stubFn
 
 -- must be form
-foreign import submitFn :: EffectFn1 (Query Elements) (Query Elements)
-submit :: (Query Elements) -> CypressM (Query Elements)
-submit = naskC1 submitFn
+foreign import submitFn :: EffectFnP2 Elements Cy Elements
+submit :: Elements -> CypressM Elements
+submit = askC2 submitFn
 
 -- root
--- foreign import taskFn :: EffectFn2 String Cy Unit
+-- foreign import taskFn :: EffectFnP2 String Cy Unit
 -- task :: String -> CypressM Unit
 -- task = askC2 taskFn
 
-foreign import thenFn :: forall a b. EffectFn2 (a -> b) a b
-thn :: forall a b. (a -> b) -> a -> CypressM b
-thn = naskC2 thenFn
+-- Then is redundant in Aff
+-- foreign import thenFn :: forall a b. EffectFnP3 (a -> b) a Cy b
+-- thn :: forall a b. (a -> b) -> a -> CypressM b
+-- thn = askC3 thenFn
 
 -- root
-foreign import tickFn :: EffectFn2 Int Cy Clock
+foreign import tickFn :: EffectFnP2 Int Cy Clock
 tick :: Int -> CypressM Clock
 tick = askC2 tickFn
 
 -- root
-foreign import titleFn :: EffectFn1 Cy (Query String)
-title :: CypressM (Query String)
+foreign import titleFn :: EffectFnP1 Cy String
+title :: CypressM String
 title = askC1 titleFn
 
-foreign import triggerFn :: EffectFn2 String (Query Elements) (Query Elements)
-trigger :: String -> (Query Elements) -> CypressM (Query Elements)
-trigger = naskC2 triggerFn
+foreign import triggerFn :: EffectFnP3 String Elements Cy Elements
+trigger :: String -> Elements -> CypressM Elements
+trigger = askC3 triggerFn
 
-foreign import typeFn :: EffectFn2 String (Query Elements) (Query Elements)
-typ :: String -> (Query Elements) -> CypressM (Query Elements)
-typ = naskC2 typeFn
+foreign import typeFn :: EffectFnP3 String Elements Cy Elements
+typ :: String -> Elements -> CypressM Elements
+typ = askC3 typeFn
 
-foreign import uncheckFn :: EffectFn1 (Query Elements) (Query Elements)
-uncheck :: (Query Elements) -> CypressM (Query Elements)
-uncheck = naskC1 uncheckFn
+foreign import uncheckFn :: EffectFnP2 Elements Cy Elements
+uncheck :: Elements -> CypressM Elements
+uncheck = askC2 uncheckFn
 
 --  root
-foreign import urlFn :: EffectFn1 Cy String
+foreign import urlFn :: EffectFnP1 Cy String
 url :: CypressM String
 url = askC1 urlFn
 
 -- root
-foreign import viewportFn :: EffectFn3 Int Int Cy Unit
+foreign import viewportFn :: EffectFnP3 Int Int Cy Unit
 viewport :: Int -> Int -> CypressM Unit
 viewport = askC3 viewportFn
 
 -- root
-foreign import visitFn :: EffectFn2 String Cy Unit
-visit :: String -> CypressM Unit
+foreign import visitFn :: EffectFnP2 String Cy Window
+visit :: String -> CypressM Window
 visit = askC2 visitFn
 
 -- root
-foreign import waitFn :: EffectFn2 Int Cy Unit
+foreign import waitFn :: EffectFnP2 Int Cy Unit
 wait :: Int -> CypressM Unit
 wait = askC2 waitFn
 
 -- root
-foreign import windowFn :: EffectFn1 Cy Window
+foreign import windowFn :: EffectFnP1 Cy Window
 window :: CypressM Window
 window = askC1 windowFn
 
-foreign import withinFn :: forall a b. EffectFn3 ((Query a) -> (Query b)) (Query a) Cy (Query b)
-within :: forall a b. ((Query a) -> (Query b)) -> (Query a) -> CypressM (Query b)
+foreign import withinFn :: forall a b. EffectFnP3 (a -> b) a Cy b
+within :: forall a b. (a -> b) -> a -> CypressM b
 within = askC3 withinFn
 
 -- root
-foreign import wrapFn :: forall a. EffectFn2 a Cy (Query a)
-wrap :: forall a. a -> CypressM (Query a)
+foreign import wrapFn :: forall a. EffectFnP2 a Cy a
+wrap :: forall a. a -> CypressM a
 wrap = askC2 wrapFn
 
 -- root
--- foreign import writeFileFn :: EffectFn2 String Cy Unit
+-- foreign import writeFileFn :: EffectFnP2 String Cy Unit
 -- writeFile :: String -> CypressM Unit
 -- writeFile = askC2 writeFileFn
 
-foreign import xpathFn :: forall a. EffectFn5 (Maybe a -> Boolean) (Maybe a -> a) String GetOptions Cy (Query Elements)
-xpath :: String -> CypressM (Query Elements)
+foreign import xpathFn :: forall a. EffectFnP5 (IsJust a) (FromJust a) String GetOptions Cy Elements
+xpath :: String -> CypressM Elements
 xpath s = xpathOpt s { log: Just false, timeout: Nothing, withinSubject: Nothing }
 
-xpathOpt :: String -> GetOptions -> CypressM (Query Elements)
+xpathOpt :: String -> GetOptions -> CypressM Elements
 xpathOpt = askC5 xpathFn isJust fromJust
 
-attachFile :: String -> (Query Elements) -> CypressM  (Query Elements)
+attachFile :: String -> Elements -> CypressM  Elements
 attachFile s = attachFileOpt s Nothing
 
-foreign import attachFileFn :: forall a. EffectFn5 (Maybe a -> Boolean) (Maybe a -> a) String (Maybe { subjectType :: String }) (Query Elements) (Query Elements)
-attachFileOpt :: String -> Maybe { subjectType :: String } -> (Query Elements) -> CypressM  (Query Elements)
-attachFileOpt = naskC5 attachFileFn isJust fromJust
+foreign import attachFileFn :: forall a. EffectFnP6 (IsJust a) (FromJust a) String (Maybe { subjectType :: String }) Elements Cy Elements
+attachFileOpt :: String -> Maybe { subjectType :: String } -> Elements -> CypressM  Elements
+attachFileOpt = askC6 attachFileFn isJust fromJust
 
 
-foreign import lastFn :: EffectFn1 (Query Elements) (Query Elements)
-last :: (Query Elements) -> CypressM (Query Elements)
-last = naskC1 lastFn
+foreign import lastFn :: EffectFnP2 Elements Cy Elements
+last :: Elements -> CypressM Elements
+last = askC2 lastFn

@@ -10,6 +10,8 @@ import Foreign (F, Foreign, readBoolean, readInt, readNumber, readString)
 import Partial.Unsafe (unsafePartial)
 
 newtype Elements = Elements JQuery
+-- derive instance newtypeElements :: Newtype Elements _
+-- derive newtype instance showElements :: Show Elements
 
 propRead :: forall a. (Foreign -> F a) -> String -> Elements -> Effect a
 propRead read s (Elements e) = do

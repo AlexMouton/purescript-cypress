@@ -3,6 +3,7 @@ module Cypress ((~), CypressM, Cy, runCypress, Query, Elements) where
 import Prelude
 import Effect (Effect)
 import Control.Monad.Reader.Trans (runReaderT)
+import Effect.Aff (Aff)
 
 import Cypress.Cy as C
 import Cypress.Query as Q
@@ -10,7 +11,7 @@ import Cypress.Elements as E
 
 type Cy = C.Cy
 
-runCypress :: forall a. CypressM a -> Cy -> Effect a
+runCypress :: forall a. CypressM a -> Cy -> Aff a
 runCypress = runReaderT
 
 infixl 1 bind as ~

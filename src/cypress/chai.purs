@@ -3,13 +3,12 @@ module Cypress.Chai where
 import Prelude
 
 import Data.String.Regex (Regex)
-import Effect.Uncurried (EffectFn2, EffectFn3, EffectFn4)
 
-import Cypress.Cy (CypressM)
-import Cypress.Ask (naskC2, naskC3, naskC4)
+import Cypress.Cy (Cy, CypressM)
+import Cypress.Ask (askC3, askC4, askC5)
 import Cypress.Elements (Elements)
 -- import Cypress.Actions
-import Cypress.Query (Query)
+import Cypress.Promise (EffectFnP3, EffectFnP4, EffectFnP5)
 
 -- Deep	-- expect(obj).to.deep.equal({ name: 'Jane' })
 -- Nested	-- expect({a: {b: ['x', 'y']}}).to.have.nested.property('a.b[1]')
@@ -60,12 +59,12 @@ class ShouldStr a where
   toStr ::  a -> String
 
 class ShouldStr a <= Should a b where
-  toShould :: a -> (Query b) -> CypressM (Query b)
-  toShould' :: String -> a -> (Query b) -> CypressM (Query b)
+  toShould :: a -> b -> CypressM b
+  toShould' :: String -> a -> b -> CypressM b
 
-foreign import should0Fn :: forall a. EffectFn2 String (Query a) (Query a)
-foreign import should1Fn :: forall a b. EffectFn3 String b (Query a) (Query a)
-foreign import should2Fn :: forall a b. EffectFn4 String b b (Query a) (Query a)
+foreign import should0Fn :: forall a. EffectFnP3 String a Cy a
+foreign import should1Fn :: forall a b. EffectFnP4 String b a Cy a
+foreign import should2Fn :: forall a b. EffectFnP5 String b b a Cy a
 
 data True = True-- expect(true).to.be.true
 instance shouldStrTrue :: ShouldStr True where
@@ -73,7 +72,7 @@ instance shouldStrTrue :: ShouldStr True where
 
 instance shouldTrue :: Should True Boolean where
   toShould a = toShould' (toStr a) a
-  toShould' s True = naskC2 should0Fn s
+  toShould' s True = askC3 should0Fn s
 
 data False = False -- expect(false).to.be.false
 instance shouldStrFalse :: ShouldStr False where
@@ -81,7 +80,7 @@ instance shouldStrFalse :: ShouldStr False where
 
 instance shouldFalse :: Should False Boolean where
   toShould a = toShould' (toStr a) a
-  toShould' s False = naskC2 should0Fn s
+  toShould' s False = askC3 should0Fn s
 
 
 -- Match(RegExp)
@@ -92,7 +91,7 @@ instance shouldStrMatch :: ShouldStr Match where
 
 instance shouldMatch :: Should Match String where
   toShould a = toShould' (toStr a) a
-  toShould' s (Match re) = naskC3 should1Fn s re
+  toShould' s (Match re) = askC4 should1Fn s re
 
 
 -- String(string)	-- expect('testing').to.have.string('test')
@@ -102,7 +101,7 @@ instance shouldStrSubString :: ShouldStr SubString where
 
 instance shouldSubString :: Should SubString String where
   toShould a = toShould' (toStr a) a
-  toShould' s (SubString sub) = naskC3 should1Fn s sub
+  toShould' s (SubString sub) = askC4 should1Fn s sub
 
 
 -- CloseTo(expected, delta)
@@ -113,7 +112,7 @@ instance shouldStrCloseTo :: ShouldStr CloseTo where
 
 instance shouldCloseTo :: Should CloseTo Number where
   toShould a = toShould' (toStr a) a
-  toShould' s (CloseTo a b) = naskC4 should2Fn s a b
+  toShould' s (CloseTo a b) = askC5 should2Fn s a b
 
 -- Equal(value)
 -- -- Aliases: equals, eq	-- expect(42).to.equal(42)
@@ -125,7 +124,7 @@ instance shouldStrEq :: ShouldStr (Equal a) where
 
 instance shouldEqual :: Eq a => Should (Equal a) a where
   toShould a = toShould' (toStr a) a
-  toShould' s (Equal a) = naskC3 should1Fn s a
+  toShould' s (Equal a) = askC4 should1Fn s a
 
 -- GreaterThan(value)
 -- -- Aliases: gt, above	-- expect(10).to.be.greaterThan(5)
@@ -135,7 +134,7 @@ instance shouldStrGreaterThan :: ShouldStr (GreaterThan a) where
 
 instance shouldGreaterThan :: Ord a => Should (GreaterThan a) a where
   toShould a = toShould' (toStr a) a
-  toShould' s (GreaterThan a) = naskC3 should1Fn s a
+  toShould' s (GreaterThan a) = askC4 should1Fn s a
 
 -- LessThan(value)
 -- Lt(value)
@@ -146,7 +145,7 @@ instance shouldStrLessThan :: ShouldStr (LessThan a) where
 
 instance shouldLessThan :: Ord a => Should (LessThan a) a where
   toShould a = toShould' (toStr a) a
-  toShould' s (LessThan a) = naskC3 should1Fn s a
+  toShould' s (LessThan a) = askC4 should1Fn s a
 
 -- Least(value)
 -- Gte(value)-- Aliases: gte	-- expect(10).to.be.at.least(10)
@@ -156,7 +155,7 @@ instance shouldStrAtLeast :: ShouldStr (AtLeast a) where
 
 instance shouldAtLeast :: Ord a => Should (AtLeast a) a where
   toShould a = toShould' (toStr a) a
-  toShould' s (AtLeast a) = naskC3 should1Fn s a
+  toShould' s (AtLeast a) = askC4 should1Fn s a
 
 -- Most(value)
 -- Lte(value) -- Aliases: lte	-- expect('test').to.have.length.of.at.most(4)
@@ -166,7 +165,7 @@ instance shouldStrAtMost :: ShouldStr (AtMost a) where
 
 instance shouldAtMost :: Ord a => Should (AtMost a) a where
   toShould a = toShould' (toStr a) a
-  toShould' s (AtMost a) = naskC3 should1Fn s a
+  toShould' s (AtMost a) = askC4 should1Fn s a
 
 -- Within(start, finish)	-- expect(7).to.be.within(5,10)
 data Within a = Within a a
@@ -175,7 +174,7 @@ instance shouldStrWithin :: ShouldStr (Within a) where
 
 instance shouldWithin :: Ord a => Should (Within a) a where
   toShould a = toShould' (toStr a) a
-  toShould' s (Within a b) = naskC4 should2Fn s a b
+  toShould' s (Within a b) = askC5 should2Fn s a b
 
 
 -- OneOf(values)	-- expect(2).to.be.oneOf([1,2,3])
@@ -185,7 +184,7 @@ instance shouldStrOneOf :: ShouldStr (OneOf a) where
 
 instance shouldOneOf :: Eq a => Should (OneOf a) a where
   toShould a = toShould' (toStr a) a
-  toShould' s (OneOf is) = naskC3 should1Fn s is
+  toShould' s (OneOf is) = askC4 should1Fn s is
 
 
 newtype LengthOf a = LengthOf Int
@@ -195,11 +194,11 @@ instance shouldStrLength :: ShouldStr (LengthOf a) where
 
 instance shouldLengthArray :: Should (LengthOf (Array a)) (Array a) where
   toShould a = toShould' (toStr a) a
-  toShould' s (LengthOf i) = naskC3 should1Fn s i
+  toShould' s (LengthOf i) = askC4 should1Fn s i
 
 instance shouldLengthElements :: Should (LengthOf Elements) Elements where
   toShould a = toShould' (toStr a) a
-  toShould' s (LengthOf i) = naskC3 should1Fn s i
+  toShould' s (LengthOf i) = askC4 should1Fn s i
 
 
 newtype Visible = Visible Unit
@@ -208,7 +207,7 @@ instance shouldStrVisible :: ShouldStr Visible where
 
 instance shouldVisible :: Should Visible Elements where
   toShould a = toShould' (toStr a) a
-  toShould' s _ = naskC2 should0Fn s
+  toShould' s _ = (askC3 should0Fn) s
 
 
 -- Not -- expect(name).to.not.equal('Jane')
